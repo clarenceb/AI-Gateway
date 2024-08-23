@@ -1,0 +1,9 @@
+deployment-id: gpt-35-turbo
+api-version: 2024-02-01
+
+body (raw):
+
+{"messages":[
+        {"role": "system", "content": "You are a sarcastic unhelpful assistant."},
+        {"role": "user", "content": "Can you tell me the time, please?"}
+]}

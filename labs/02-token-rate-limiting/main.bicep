@@ -61,13 +61,13 @@ param apimPublisherEmail string = 'noreply@microsoft.com'
 param apimPublisherName string = 'Microsoft'
 
 @description('The name of the APIM API for OpenAI API')
-param openAIAPIName string = 'openai'
+param openAIAPIName string = 'openai-ratelimit'
 
 @description('The relative path of the APIM API for OpenAI API')
-param openAIAPIPath string = 'openai'
+param openAIAPIPath string = 'openai-ratelimit'
 
 @description('The display name of the APIM API for OpenAI API')
-param openAIAPIDisplayName string = 'OpenAI'
+param openAIAPIDisplayName string = 'OpenAI (RateLimit)'
 
 @description('The description of the APIM API for OpenAI API')
 param openAIAPIDescription string = 'Azure OpenAI API inferencing API'
@@ -251,8 +251,6 @@ resource backendPoolOpenAI 'Microsoft.ApiManagement/service/backends@2023-05-01-
     pool: {
       services: [for (config, i) in openAIConfig: {
           id: '/backends/${backendOpenAI[i].name}'
-          priority: config.priority
-          weight: config.weight
         }
       ]
     }
@@ -270,8 +268,6 @@ resource backendPoolMock 'Microsoft.ApiManagement/service/backends@2023-05-01-pr
     pool: {
       services: [for (webApp, i) in mockWebApps: {
           id: '/backends/${backendMock[i].name}'
-          priority: webApp.priority
-          weight: webApp.weight
         }
       ]
     }
@@ -292,6 +288,8 @@ resource apimSubscription 'Microsoft.ApiManagement/service/subscriptions@2023-05
 output apimServiceId string = apimService.id
 
 output apimResourceGatewayURL string = apimService.properties.gatewayUrl
+
+output apimName string = apimService.name
 
 #disable-next-line outputs-should-not-contain-secrets
 output apimSubscriptionKey string = apimSubscription.listSecrets().primaryKey

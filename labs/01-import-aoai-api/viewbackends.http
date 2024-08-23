@@ -1,0 +1,12 @@
+@az_auth_token={{$dotenv AZ_AUTH_TOKEN}}
+@az_subscription={{$dotenv AZ_SUBSCRIPTION}}
+@apim={{$dotenv APIM_NAME}}
+@rg_name=lab-genaigateway
+@backend=openai-backend-pool
+@api_version=2023-05-01-preview
+
+###
+# View backend pool details
+GET https://management.azure.com/subscriptions/{{az_subscription}}/resourceGroups/{{rg_name}}/providers/Microsoft.ApiManagement/service/{{apim}}/backends/{{backend}}?api-version={{api_version}}
+content-type: application/json
+authorization: Bearer {{az_auth_token}}

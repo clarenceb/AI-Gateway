@@ -61,13 +61,13 @@ param apimPublisherEmail string = 'noreply@microsoft.com'
 param apimPublisherName string = 'Microsoft'
 
 @description('The name of the APIM API for OpenAI API')
-param openAIAPIName string = 'openai'
+param openAIAPIName string = 'openai-caching'
 
 @description('The relative path of the APIM API for OpenAI API')
-param openAIAPIPath string = 'openai'
+param openAIAPIPath string = 'openai-caching'
 
 @description('The display name of the APIM API for OpenAI API')
-param openAIAPIDisplayName string = 'OpenAI'
+param openAIAPIDisplayName string = 'OpenAI (Semantic Caching)'
 
 @description('The description of the APIM API for OpenAI API')
 param openAIAPIDescription string = 'Azure OpenAI API inferencing API'
@@ -87,7 +87,7 @@ param openAIBackendPoolName string = 'openai-backend-pool'
 @description('The description of the OpenAI backend pool')
 param openAIBackendPoolDescription string = 'Load balancer for multiple OpenAI endpoints'
 
-// buult-in logging: additions BEGIN
+// built-in logging: additions BEGIN
 
 @description('Name of the Log Analytics resource')
 param logAnalyticsName string = 'workspace'
@@ -206,16 +206,21 @@ resource apimService 'Microsoft.ApiManagement/service@2023-05-01-preview' = {
 
 // semantic-caching: additions BEGIN
 
-resource redisEnterprise 'Microsoft.Cache/redisEnterprise@2022-01-01' = {
+resource redisEnterprise 'Microsoft.Cache/redisEnterprise@2023-11-01' = {
   name: '${redisCacheName}-${resourceSuffix}'
   location: redisCacheLocation
   sku: {
     name: redisCacheSKU
     capacity: redisCacheCapacity
   }
+  zones: [
+    '1'
+    '2'
+    '3'
+  ]
 }
 
-resource redisCache 'Microsoft.Cache/redisEnterprise/databases@2022-01-01' = {
+resource redisCache 'Microsoft.Cache/redisEnterprise/databases@2023-11-01' = {
   name: 'default'
   parent: redisEnterprise
   properties: {
